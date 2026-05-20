@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Activate FormSubmit — TNT Steel</title>
+<style>
+  body { font: 16px/1.5 -apple-system, system-ui, sans-serif; max-width: 560px; margin: 60px auto; padding: 0 20px; color: #0E1A3C; }
+  h1 { font-size: 22px; margin-bottom: 6px; }
+  p { color: #4a5375; }
+  ol { padding-left: 20px; }
+  li { margin: 8px 0; }
+  form { margin-top: 28px; padding: 20px; background: #f5f3ec; border: 1px solid #e3dfd0; border-radius: 8px; }
+  label { display: block; font-size: 13px; color: #4a5375; margin-bottom: 6px; }
+  input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #c8c2ad; border-radius: 6px; font: inherit; margin-bottom: 12px; box-sizing: border-box; }
+  button { background: #F2A007; color: #0E1A3C; font-weight: 700; padding: 12px 20px; border: 0; border-radius: 6px; cursor: pointer; font-size: 15px; }
+  button:hover { background: #d98a00; }
+  code { background: #ecead7; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+  <h1>Activate FormSubmit for <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0afa6a6a9a3a580b4aeb4b3b4a5a5acb5b3a1eea3afad">[email&#160;protected]</a></h1>
+  <p>Submit this form ONCE. FormSubmit will email <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5c333a3a353f391c2832282f28393930292f3d723f3331">[email&#160;protected]</a></code> with a confirmation link. After you click it, the live website form will start working.</p>
+
+  <ol>
+    <li>Click <b>Send activation</b> below.</li>
+    <li>Open <b><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f000909060c0a2f1b011b1c1b0a0a031a1c0e410c0002">[email&#160;protected]</a></b> inbox (check Spam folder too).</li>
+    <li>Find an email from <b>FormSubmit</b> with subject <i>"Confirm your email"</i>.</li>
+    <li>Click the big <b>"I'm not a robot — Confirm Email"</b> button inside.</li>
+    <li>Done — the live form on tntsteelusa.com will work from now on.</li>
+  </ol>
+
+  <!-- Regular (non-AJAX) POST — this is what triggers FormSubmit's activation flow -->
+  <form action="https://formsubmit.co/office@tntsteelusa.com" method="POST">
+    <input type="hidden" name="_subject" value="FormSubmit activation test — tntsteelusa.com" />
+    <input type="hidden" name="_captcha" value="false" />
+    <input type="hidden" name="_template" value="table" />
+
+    <label for="name">Your name</label>
+    <input id="name" name="Name" type="text" value="TNT Steel Admin" required />
+
+    <label for="msg">Message</label>
+    <textarea id="msg" name="Message" rows="3" required>This is a one-time activation test for FormSubmit. Please ignore.</textarea>
+
+    <button type="submit">Send activation →</button>
+  </form>
+
+  <p style="margin-top:28px; font-size: 13px; color: #8a8674;">
+    You only need to do this once. After confirmation, you can delete this file from the server.
+  </p>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>
