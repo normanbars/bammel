@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>TNT Steel — Site Under Construction</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+<meta name="theme-color" content="#0E1A3C" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0E1A3C;
+    --navy-2: #15234A;
+    --navy-3: #1d2e5e;
+    --ink: #0a1230;
+    --bone: #F2EFE7;
+    --paper: #ECE7D8;
+    --steel: #8A93AE;
+    --steel-2: #B8BFD3;
+    --amber: #F2A007;       /* construction caution */
+    --amber-2: #FF7A1A;     /* deeper hot accent */
+    --rule: rgba(242,239,231,0.16);
+    --rule-strong: rgba(242,239,231,0.34);
+    --maxw: 1640px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--ink); color: var(--bone); overflow-x: clip; }
+  body {
+    font-family: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    overflow-x: clip;
+    line-height: 1.4;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+  .narrow { font-family: 'Archivo Narrow', 'Archivo', sans-serif; }
+
+  /* ---------- STAGE ---------- */
+  .stage {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Background photo with parallax shell */
+  .bg {
+    position: absolute;
+    inset: -4% -4%;
+    z-index: -3;
+    background-image: url('assets/construction-bg.jpg');
+    background-size: cover;
+    background-position: center 35%;
+    transform: scale(1.06);
+    filter: saturate(0.78) contrast(1.05) brightness(0.7);
+    will-change: transform;
+  }
+  /* Dark navy gradient wash */
+  .wash {
+    position: absolute; inset: 0; z-index: -2;
+    background:
+      radial-gradient(120% 80% at 20% 100%, rgba(14,26,60,0.65) 0%, rgba(14,26,60,0.2) 45%, rgba(14,26,60,0) 70%),
+      linear-gradient(180deg, rgba(10,18,48,0.78) 0%, rgba(10,18,48,0.35) 35%, rgba(10,18,48,0.55) 75%, rgba(10,18,48,0.92) 100%),
+      linear-gradient(90deg, rgba(10,18,48,0.55) 0%, rgba(10,18,48,0.05) 50%, rgba(10,18,48,0.55) 100%);
+  }
+  /* Subtle blueprint grid overlay */
+  .grid-overlay {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(242,239,231,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,239,231,0.05) 1px, transparent 1px),
+      linear-gradient(rgba(242,239,231,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(242,239,231,0.025) 1px, transparent 1px);
+    background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+    background-position: -1px -1px;
+    mask-image: radial-gradient(120% 100% at 50% 50%, black 30%, transparent 100%);
+  }
+  /* Scanline / noise */
+  .grain {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0.18;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyNDAnIGhlaWdodD0nMjQwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMC45JyBudW1PY3RhdmVzPScyJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPScwIDAgMCAwIDEgIDAgMCAwIDAgMSAgMCAwIDAgMCAxICAwIDAgMCAwLjUgMCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCUyM24pJy8+PC9zdmc+");
+    mix-blend-mode: overlay;
+  }
+
+  /* ---------- FRAME CHROME ---------- */
+  .frame {
+    position: fixed; inset: 18px; z-index: 60; pointer-events: none;
+    border: 1px solid var(--rule);
+  }
+  .corner {
+    position: absolute; width: 28px; height: 28px;
+    border: 1.5px solid var(--bone);
+  }
+  .corner.tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .corner.tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+  .corner.bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+  .corner.br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+  /* Crosshair plus marks at frame edges */
+  .plus {
+    position: absolute; width: 12px; height: 12px; opacity: 0.6;
+  }
+  .plus::before, .plus::after {
+    content: ''; position: absolute; background: var(--bone);
+  }
+  .plus::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-0.5px); }
+  .plus::after  { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-0.5px); }
+  .plus.t { top: -6px; left: 50%; transform: translateX(-50%); }
+  .plus.b { bottom: -6px; left: 50%; transform: translateX(-50%); }
+  .plus.l { left: -6px; top: 50%; transform: translateY(-50%); }
+  .plus.r { right: -6px; top: 50%; transform: translateY(-50%); }
+
+  /* ---------- LAYOUT ---------- */
+  .shell {
+    position: relative;
+    z-index: 2;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 56px 56px 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+  }
+
+  /* HEADER */
+  header.top {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .brandmark {
+    display: flex; align-items: center; gap: 18px;
+  }
+  .brandmark img {
+    height: 32px; width: auto; display: block;
+  }
+  .brandmark .divider {
+    width: 1px; height: 26px; background: var(--rule-strong);
+  }
+  .brandmark .tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel-2);
+    line-height: 1.35;
+  }
+  .brandmark .tagline span { color: var(--bone); display: block; }
+
+  .topmeta {
+    display: flex; justify-content: center; gap: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.16em;
+    color: var(--steel-2);
+    text-transform: uppercase;
+  }
+  .topmeta .item { display: flex; align-items: center; gap: 8px; }
+  .topmeta .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 0 0 rgba(242,160,7,0.6);
+    animation: pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(242,160,7,0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(242,160,7,0); }
+    100% { box-shadow: 0 0 0 0 rgba(242,160,7,0); }
+  }
+  .topmeta .item.live { color: var(--bone); }
+
+  .toprhs {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.16em;
+    color: var(--steel-2);
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+  .toprhs .big { display: block; color: var(--bone); font-size: 11px; letter-spacing: 0.22em; }
+
+  /* MAIN */
+  main.body {
+    display: grid;
+    grid-template-columns: 64px 1fr 64px;
+    align-items: stretch;
+    position: relative;
+    min-height: 0;
+  }
+
+  .rail {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 16px 0;
+  }
+  .rail .tick {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--steel);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    text-transform: uppercase;
+  }
+  .rail.left { align-items: flex-start; }
+  .rail.right { align-items: flex-end; }
+  .rail .marks {
+    display: flex; flex-direction: column; gap: 16px; align-items: center;
+    padding: 24px 0;
+  }
+  .rail .marks span {
+    display: block; width: 12px; height: 1px; background: var(--rule-strong);
+  }
+  .rail .marks span:nth-child(5n) { width: 22px; background: var(--bone); }
+
+  /* CENTER CONTENT */
+  .center {
+    padding: 28px 36px 36px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+    min-width: 0;
+  }
+
+  .eyebrow {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--steel-2);
+    margin-bottom: 28px;
+  }
+  .eyebrow .bar {
+    height: 1px; width: 56px; background: var(--bone); opacity: 0.7;
+  }
+  .eyebrow .code {
+    color: var(--bone);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-size: 10.5px;
+  }
+
+  h1.hero {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 120px;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin: 0;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+  h1.hero .row {
+    display: block;
+    margin-top: -0.18em;
+  }
+  h1.hero .row:first-child { margin-top: 0; }
+  h1.hero .row:nth-child(3) { margin-top: -0.42em; }
+  h1.hero .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(28px);
+    animation: rise 1s cubic-bezier(.2,.7,.1,1) forwards;
+  }
+  h1.hero .word.d2 { animation-delay: .08s; }
+  h1.hero .word.d3 { animation-delay: .16s; }
+  h1.hero .word.d4 { animation-delay: .24s; }
+  h1.hero .word.d5 { animation-delay: .32s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  h1.hero .accent {
+    color: var(--amber);
+    -webkit-text-stroke: 0;
+    position: relative;
+  }
+  h1.hero .outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--bone);
+  }
+
+  .subline {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    max-width: 760px;
+  }
+  .subline p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--steel-2);
+  }
+  .subline p strong { color: var(--bone); font-weight: 600; }
+  .subline .lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--steel);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* PROGRESS PANEL */
+  .progress-panel {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr);
+    align-items: end;
+    gap: 36px;
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+  }
+  .progress-block { min-width: 0; }
+  .progress-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--steel-2);
+    margin-bottom: 14px;
+  }
+  .progress-label .now { color: var(--bone); }
+  .pbar {
+    height: 8px;
+    background: rgba(242,239,231,0.10);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--rule-strong);
+  }
+  .pbar .fill {
+    position: absolute; inset: 0 auto 0 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--amber-2), var(--amber));
+    transition: width 15s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 0 16px rgba(242,160,7,0.45);
+  }
+  .pbar .fill::after {
+    content: ''; position: absolute; right: 0; top: -3px; bottom: -3px;
+    width: 2px; background: var(--bone);
+    box-shadow: 0 0 14px var(--bone);
+  }
+  .pbar .ticks {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), rgba(242,239,231,0.18) calc(10% - 1px) 10%);
+    pointer-events: none;
+  }
+  .pct {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 64px;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--bone);
+    font-variant-numeric: tabular-nums;
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .pct .sign { font-size: 28px; color: var(--steel-2); font-weight: 600; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 16px 28px;
+  }
+  .stat {
+    border-left: 1px solid var(--rule-strong);
+    padding: 4px 0 4px 14px;
+  }
+  .stat .k {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--steel);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .stat .v {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--bone);
+    letter-spacing: -0.005em;
+  }
+
+  /* CTA contact */
+  .cta {
+    margin-top: 44px;
+    display: flex; flex-wrap: wrap; gap: 14px;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--bone);
+    text-decoration: none;
+    border: 1px solid var(--bone);
+    transition: all .25s ease;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+  .btn .arrow { display: inline-block; transition: transform .25s ease; }
+  .btn:hover .arrow { transform: translateX(4px); }
+
+  .btn.ghost {
+    background: transparent; color: var(--bone);
+  }
+  .btn.ghost:hover { background: var(--bone); color: var(--ink); }
+
+  .contact-inline {
+    margin-top: 24px;
+    display: flex; flex-wrap: wrap; gap: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em;
+    color: var(--steel-2);
+    text-transform: uppercase;
+  }
+  .contact-inline a { color: var(--bone); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+  .contact-inline a:hover { border-color: var(--amber); }
+  .contact-inline .k { color: var(--steel); margin-right: 8px; }
+
+  /* FOOTER */
+  footer.bot {
+    border-top: 1px solid var(--rule);
+    padding: 18px 0 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel-2);
+  }
+  footer.bot .copy { color: var(--bone); }
+  footer.bot .marquee {
+    overflow: hidden; position: relative;
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  footer.bot .marquee .track {
+    display: inline-flex; gap: 36px; white-space: nowrap;
+    animation: scroll 38s linear infinite;
+    padding-right: 36px;
+  }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  footer.bot .marquee .item { color: var(--steel-2); }
+  footer.bot .marquee .item .sep { color: var(--amber); margin: 0 6px; }
+  footer.bot .right { text-align: right; line-height: 1.4; }
+  footer.bot .right .big { color: var(--bone); display: block; }
+
+  /* ---------- MODAL ---------- */
+  .modal-root {
+    position: fixed; inset: 0; z-index: 200;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-root.open { display: flex; }
+  .modal-root .backdrop {
+    position: absolute; inset: 0;
+    background: rgba(6,10,28,0.78);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    animation: fadeIn .25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    position: relative;
+    z-index: 1;
+    width: min(640px, 100%);
+    max-height: 92vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #101a3d 0%, #0a1230 100%);
+    color: var(--bone);
+    border: 1px solid var(--rule-strong);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(242,160,7,0.08);
+    animation: rise-in .35s cubic-bezier(.2,.7,.1,1);
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal::before, .modal::after {
+    content: ''; position: absolute; width: 14px; height: 14px;
+    border: 1.5px solid var(--bone); pointer-events: none;
+  }
+  .modal::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .modal::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+  .modal .mheader {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 16px;
+    padding: 24px 28px 18px;
+    border-bottom: 1px solid var(--rule);
+    background:
+      linear-gradient(rgba(242,239,231,0.025) 1px, transparent 1px) 0 0 / 28px 28px,
+      linear-gradient(90deg, rgba(242,239,231,0.025) 1px, transparent 1px) 0 0 / 28px 28px;
+  }
+  .modal .mheader .eyebrow-m {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--steel-2);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .modal .mheader .eyebrow-m .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--amber);
+  }
+  .modal .mheader h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--bone);
+    margin: 0;
+  }
+  .modal .mheader p.sub {
+    margin: 8px 0 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--steel-2);
+    max-width: 44ch;
+  }
+  .modal .close {
+    width: 36px; height: 36px;
+    background: transparent;
+    color: var(--bone);
+    border: 1px solid var(--rule-strong);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+    display: grid; place-items: center;
+  }
+  .modal .close:hover { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+
+  .modal .call-strip {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    padding: 14px 28px;
+    background: rgba(242,160,7,0.08);
+    border-bottom: 1px solid rgba(242,160,7,0.22);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--steel-2);
+  }
+  .modal .call-strip a.call-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--ink);
+    background: var(--amber);
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--amber);
+    transition: transform .2s ease, box-shadow .2s ease;
+    white-space: nowrap;
+  }
+  .modal .call-strip a.call-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(242,160,7,0.35);
+  }
+  .modal .call-strip .phone-icon {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+
+  .modal form {
+    padding: 24px 28px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .modal form .field { display: flex; flex-direction: column; gap: 8px; }
+  .modal form .field.full { grid-column: 1 / -1; }
+  .modal form label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--steel);
+    display: flex; justify-content: space-between;
+  }
+  .modal form label .req { color: var(--amber); }
+  .modal form input,
+  .modal form select,
+  .modal form textarea {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--rule-strong);
+    color: var(--bone);
+    font-family: 'Archivo', sans-serif;
+    font-size: 14.5px;
+    padding: 12px 14px;
+    border-radius: 0;
+    outline: none;
+    transition: border-color .2s, background .2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .modal form select {
+    background-image: linear-gradient(45deg, transparent 50%, var(--steel-2) 50%),
+                      linear-gradient(135deg, var(--steel-2) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+  }
+  .modal form select option { background: #101a3d; color: var(--bone); }
+  .modal form textarea {
+    resize: vertical;
+    min-height: 96px;
+    line-height: 1.5;
+    font-family: 'Archivo', sans-serif;
+  }
+  .modal form input:focus,
+  .modal form select:focus,
+  .modal form textarea:focus {
+    border-color: var(--amber);
+    background: rgba(0,0,0,0.4);
+  }
+  .modal form input::placeholder,
+  .modal form textarea::placeholder { color: rgba(184,191,211,0.45); }
+
+  .modal form .actions {
+    grid-column: 1 / -1;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+    margin-top: 6px;
+  }
+  .modal form .actions .submit {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--bone);
+    border: 1px solid var(--bone);
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .modal form .actions .submit:hover { background: var(--amber); border-color: var(--amber); }
+  .modal form .actions .submit:disabled { opacity: 0.5; cursor: wait; }
+  .modal form .actions .submit .arrow { transition: transform .2s ease; }
+  .modal form .actions .submit:hover .arrow { transform: translateX(4px); }
+  .modal form .actions .privacy {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--steel);
+    max-width: 32ch;
+    line-height: 1.5;
+  }
+
+  /* Notify modal — single column */
+  .modal.notify form {
+    grid-template-columns: 1fr;
+  }
+
+  .modal .status {
+    grid-column: 1 / -1;
+    padding: 28px 4px 4px;
+    text-align: center;
+    display: none;
+  }
+  .modal .status.show { display: block; }
+  .modal .status .stamp-ok {
+    display: inline-grid; place-items: center;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    margin-bottom: 16px;
+  }
+  .modal .status h3 {
+    margin: 0 0 8px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--bone);
+  }
+  .modal .status p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--steel-2);
+  }
+  .modal .status .err { color: #ff7a7a; }
+
+  .modal-root[aria-hidden="true"] { display: none; }
+
+  /* Desktop-only layout */
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#0a1230">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0a1230"/>
+    <rect x="60" y="60" width="1080" height="680" fill="none" stroke="#F2EFE7" stroke-opacity="0.18" stroke-width="2"/>
+    <!-- corner marks -->
+    <g stroke="#F2EFE7" stroke-width="3" fill="none">
+      <path d="M60 100 L60 60 L100 60"/>
+      <path d="M1100 60 L1140 60 L1140 100"/>
+      <path d="M60 700 L60 740 L100 740"/>
+      <path d="M1100 740 L1140 740 L1140 700"/>
+    </g>
+    <!-- TNT badge -->
+    <g transform="translate(600 360)">
+      <rect x="-110" y="-110" width="220" height="220" fill="#0E1A3C"/>
+      <rect x="-98" y="-98" width="196" height="196" fill="none" stroke="#F2A007" stroke-width="3"/>
+      <text x="0" y="22" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="900" font-size="78" letter-spacing="-2" text-anchor="middle" fill="#F2EFE7">TNT</text>
+    </g>
+    <text x="600" y="540" font-family="Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-weight="800" font-size="42" letter-spacing="-1" text-anchor="middle" fill="#F2EFE7">UNDER CONSTRUCTION</text>
+    <text x="600" y="585" font-family="'JetBrains Mono', monospace" font-size="18" letter-spacing="6" text-anchor="middle" fill="#8A93AE">TNT STEEL · LOADING</text>
+    <!-- progress bar -->
+    <g transform="translate(380 640)">
+      <rect width="440" height="8" fill="#F2EFE7" fill-opacity="0.1" stroke="#F2EFE7" stroke-opacity="0.34"/>
+      <rect width="295" height="8" fill="#F2A007"/>
+    </g>
+  </svg>
+</template>
+
+<!-- Fixed frame chrome -->
+<div class="frame" aria-hidden="true">
+  <span class="corner tl"></span><span class="corner tr"></span>
+  <span class="corner bl"></span><span class="corner br"></span>
+  <span class="plus t"></span><span class="plus b"></span>
+  <span class="plus l"></span><span class="plus r"></span>
+</div>
+
+<div class="stage">
+  <div class="bg" id="bg"></div>
+  <div class="wash"></div>
+  <div class="grid-overlay"></div>
+  <div class="grain"></div>
+
+  <div class="shell">
+
+    <!-- HEADER -->
+    <header class="top">
+      <div class="brandmark">
+        <img src="assets/tnt-logo-white.png" alt="TNT Steel" />
+        <span class="divider"></span>
+        <span class="tagline">STEEL FABRICATION GROUP<br>EST. 2026 — HOUSTON, USA</span>
+      </div>
+
+      <div class="topmeta">
+        <span class="item live"><span class="dot"></span>Build in progress</span>
+        <span class="item">Sector / 02 — Web</span>
+        <span class="item">Phase / 03 of 05</span>
+      </div>
+
+      <div class="toprhs">
+        <span class="big">
+</span>
+        <span></span>
+      </div>
+    </header>
+
+    <!-- BODY -->
+    <main class="body">
+
+      <!-- Left rail -->
+      <aside class="rail left" aria-hidden="true">
+        <div class="tick">N 40°42′ — W 074°00′</div>
+        <div class="marks">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="tick">Drawing TNT-001 / Rev. C</div>
+      </aside>
+
+      <!-- Center column -->
+      <section class="center">
+
+        <div class="eyebrow">
+          <span class="bar"></span>
+          <span class="code">001 / NOTICE</span>
+          <span>Site under construction — building the new tntsteelusa.com</span>
+        </div>
+
+        <h1 class="hero" aria-label="We are building the new TNT Steel.">
+          <span class="row"><span class="word d1" style="font-size: 50px; letter-spacing: -2px">We&nbsp;are</span></span>
+          <span class="row"><span class="word d2 outline" style="font-size: 120px">building</span></span>
+          <span class="row"><span class="word d3" style="font-size: 50px; letter-spacing: -2.9px">TNT STEEL</span></span>
+        </h1>
+
+        <div class="subline">
+          <p>
+            <span class="lang">NOTE — 01</span>
+            Our digital home is being engineered with the same precision we bring to the field. <strong>Pre-engineered steel buildings and structural fabrication</strong> — the full catalogue, project gallery and quote tool arrive shortly.
+          </p>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-panel">
+          <div class="progress-block">
+            <div class="progress-label">
+              <span>Build progress</span>
+              <span class="now mono" id="phaseLabel">Phase 03 — Structural</span>
+            </div>
+            <div class="pbar">
+              <div class="ticks"></div>
+              <div class="fill" id="fill" style="width:0%"></div>
+            </div>
+            <div class="progress-label" style="margin-top:10px;">
+              <span>Foundation</span>
+              <span>Framing</span>
+              <span>Cladding</span>
+              <span>Fit-out</span>
+              <span>Hand-over</span>
+            </div>
+          </div>
+
+          <div class="pct"><span id="pct">00</span><span class="sign">%</span></div>
+
+          <div class="stats">
+            <div class="stat"><span class="k">Launch est.</span><span class="v">Q2 · 2026</span></div>
+            <div class="stat"><span class="k">Scope</span><span class="v">Full rebuild</span></div>
+            <div class="stat"><span class="k">Pages</span><span class="v">24 / 36</span></div>
+            <div class="stat"><span class="k">Assets</span><span class="v">1,284</span></div>
+            <div class="stat"><span class="k">Tonnes drawn</span><span class="v">12,400 t</span></div>
+            <div class="stat"><span class="k">Crew</span><span class="v">4 builders</span></div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta">
+          <button class="btn" type="button" id="quoteBtn">
+            <span>Request a quote</span>
+            <span class="arrow">→</span>
+          </button>
+          <button class="btn ghost" type="button" id="notifyBtn">
+            <span>Notify me at launch</span>
+            <span class="arrow">↗</span>
+          </button>
+        </div>
+
+        <div class="contact-inline">
+          <span><span class="k">T /</span><a href="tel:+18005551234">+1 (346) 827-4987</a></span>
+          <span><span class="k">E /</span><a href="/cdn-cgi/l/email-protection#a4cbc2c2cdc7c1e4d0cad0d7d0c1c1c8d1d7c58ac7cbc9"><span class="__cf_email__" data-cfemail="773831313e343237233923242332323b2224365934383a">[email&#160;protected]</span></a></span>
+          <span><span class="k">HQ /</span>Houston, TX · USA</span>
+        </div>
+
+      </section>
+
+      <!-- Right rail -->
+      <aside class="rail right" aria-hidden="true">
+        <div class="tick">Scale 1 : 100 — A1 / Sheet 01</div>
+        <div class="marks">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="tick">© TNT Steel Construction Group</div>
+      </aside>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bot">
+      <div class="copy">© 2026 TNT Steel · All rights reserved</div>
+      <div class="marquee" aria-hidden="true">
+        <div class="track" id="track">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+      <div class="right">
+        <span class="big">Follow the build</span>
+        <span>LinkedIn · Instagram · Facebook</span>
+      </div>
+    </footer>
+
+  </div>
+
+</div>
+
+<!-- ============== REQUEST A QUOTE MODAL ============== -->
+<div class="modal-root" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteTitle" aria-hidden="true">
+  <div class="backdrop" data-close></div>
+  <div class="modal" role="document">
+    <div class="mheader">
+      <div>
+        <div class="eyebrow-m"><span class="dot"></span>Form 002 · Project intake</div>
+        <h2 id="quoteTitle">Request a quote</h2>
+        <p class="sub">Tell us briefly about your project — our team will reply within one business day with a scope and budget range.</p>
+      </div>
+      <button type="button" class="close" data-close aria-label="Close dialog">✕</button>
+    </div>
+
+    <div class="call-strip">
+      <span>Need to talk now? Call our office direct →</span>
+      <a class="call-btn" href="tel:+13468274987">
+        <svg class="phone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.94.36 1.87.69 2.75a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.33-1.33a2 2 0 0 1 2.11-.45c.88.33 1.81.56 2.75.69A2 2 0 0 1 22 16.92Z"/>
+        </svg>
+        +1 (346) 827‑4987
+      </a>
+    </div>
+
+    <form id="quoteForm" action="https://formsubmit.co/ajax/office@tntsteelusa.com" method="POST" novalidate data-min-fill-ms="3000">
+      <!-- FormSubmit config -->
+      <input type="hidden" name="_subject" value="New quote request — tntsteelusa.com" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_url" value="https://tntsteelusa.com/" />
+      <!-- Anti-spam: honeypot (bots fill, humans don't) + a second honeypot disguised as a real-looking field -->
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+      <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <div class="field">
+        <label for="qName">Full name <span class="req">*</span></label>
+        <input id="qName" name="Name" type="text" required placeholder="John Doe" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="qCompany">Company</label>
+        <input id="qCompany" name="Company" type="text" placeholder="Optional" autocomplete="organization" />
+      </div>
+      <div class="field">
+        <label for="qPhone">Phone <span class="req">*</span></label>
+        <input id="qPhone" name="Phone" type="tel" required placeholder="+1 (___) ___‑____" autocomplete="tel" />
+      </div>
+      <div class="field">
+        <label for="qEmail">Email <span class="req">*</span></label>
+        <input id="qEmail" name="Email" type="email" required placeholder="you@company.com" autocomplete="email" />
+      </div>
+      <div class="field full">
+        <label for="qType">Project type</label>
+        <select id="qType" name="Project Type">
+          <option value="Pre-engineered metal building">Pre‑engineered metal building</option>
+          <option value="Structural steel fabrication">Structural steel fabrication</option>
+          <option value="Industrial / warehouse">Industrial / warehouse</option>
+          <option value="Commercial / retail">Commercial / retail</option>
+          <option value="Agricultural">Agricultural</option>
+          <option value="Other / not sure yet">Other / not sure yet</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="qMsg">Project details <span class="req">*</span></label>
+        <textarea id="qMsg" name="Message" required placeholder="Size (sqft), location, timeline, anything else we should know…"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="submit" type="submit" id="qSubmit">
+          <span>Send request</span>
+          <span class="arrow">→</span>
+        </button>
+        <span class="privacy">We respect your privacy. Used only to reply to your inquiry.</span>
+      </div>
+
+      <div class="status" id="qStatus" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============== NOTIFY ME MODAL ============== -->
+<div class="modal-root" id="notifyModal" role="dialog" aria-modal="true" aria-labelledby="notifyTitle" aria-hidden="true">
+  <div class="backdrop" data-close></div>
+  <div class="modal notify" role="document">
+    <div class="mheader">
+      <div>
+        <div class="eyebrow-m"><span class="dot"></span>Form 003 · Launch list</div>
+        <h2 id="notifyTitle">Notify me at launch</h2>
+        <p class="sub">Drop your email and we'll send one note the day the new TNT Steel site goes live. No spam, no newsletters.</p>
+      </div>
+      <button type="button" class="close" data-close aria-label="Close dialog">✕</button>
+    </div>
+
+    <form id="notifyForm" action="https://formsubmit.co/ajax/office@tntsteelusa.com" method="POST" novalidate data-min-fill-ms="3000">
+      <input type="hidden" name="_subject" value="Launch list signup — tntsteelusa.com" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_url" value="https://tntsteelusa.com/" />
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+      <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <div class="field">
+        <label for="nEmail">Email <span class="req">*</span></label>
+        <input id="nEmail" name="Email" type="email" required placeholder="you@company.com" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="nName">Name (optional)</label>
+        <input id="nName" name="Name" type="text" placeholder="So we know who to write" autocomplete="name" />
+      </div>
+
+      <div class="actions">
+        <button class="submit" type="submit" id="nSubmit">
+          <span>Add me to the list</span>
+          <span class="arrow">→</span>
+        </button>
+        <span class="privacy">One email. The day we launch. That's it.</span>
+      </div>
+
+      <div class="status" id="nStatus" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ---- Animated progress counter ----
+  const TARGET = 67;
+  const pctEl = document.getElementById('pct');
+  const fillEl = document.getElementById('fill');
+  // Set bar width on first paint so transition runs
+  requestAnimationFrame(() => {
+    fillEl.style.width = TARGET + '%';
+  });
+  // Animate the number
+  const dur = 15000;
+  const start = performance.now();
+  function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
+  function tick(now){
+    const t = Math.min(1, (now - start) / dur);
+    const v = Math.floor(easeOut(t) * TARGET);
+    pctEl.textContent = String(v).padStart(2, '0');
+    if (t < 1) requestAnimationFrame(tick);
+    else pctEl.textContent = String(TARGET).padStart(2, '0');
+  }
+  requestAnimationFrame(tick);
+
+  // ---- Marquee items ----
+  const items = [
+    'PRE-ENGINEERED METAL BUILDINGS',
+    'STRUCTURAL STEEL FABRICATION',
+    'INDUSTRIAL · COMMERCIAL · AGRICULTURAL',
+    'AISC CERTIFIED',
+    'TURNKEY DELIVERY',
+    'AMERICAN MADE STEEL',
+    'EST. 2026',
+    'BUILDING THE FUTURE — ONE BEAM AT A TIME'
+  ];
+  const track = document.getElementById('track');
+  const html = items.map(s => `<span class="item">${s}<span class="sep">×</span></span>`).join('');
+  track.innerHTML = html + html; // duplicate for seamless loop
+
+  // ---- Subtle mouse parallax on bg ----
+  const bg = document.getElementById('bg');
+  let raf = null;
+  window.addEventListener('mousemove', (e) => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 12;
+      const y = (e.clientY / window.innerHeight - 0.5) * 8;
+      bg.style.transform = `scale(1.06) translate(${-x}px, ${-y}px)`;
+      raf = null;
+    });
+  });
+
+  // ---- Modal logic ----
+  const modalRoots = document.querySelectorAll('.modal-root');
+  const openModal = (id) => {
+    const m = document.getElementById(id);
+    if (!m) return;
+    m.classList.add('open');
+    m.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    // Stamp open-time on any form inside so we can reject suspiciously-fast submits
+    m.querySelectorAll('form[data-min-fill-ms]').forEach(f => {
+      f.dataset.openedAt = String(Date.now());
+    });
+    // focus first input
+    setTimeout(() => {
+      const firstInput = m.querySelector('input:not([type="hidden"]), textarea, select');
+      if (firstInput) firstInput.focus();
+    }, 60);
+  };
+  const closeModal = (m) => {
+    m.classList.remove('open');
+    m.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+  modalRoots.forEach(m => {
+    m.querySelectorAll('[data-close]').forEach(el => {
+      el.addEventListener('click', () => closeModal(m));
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      modalRoots.forEach(m => { if (m.classList.contains('open')) closeModal(m); });
+    }
+  });
+
+  document.getElementById('quoteBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal('quoteModal');
+  });
+  document.getElementById('notifyBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal('notifyModal');
+  });
+
+  // ---- Form submission via FormSubmit.co (AJAX) ----
+  const FALLBACK_EMAIL = 'office@tntsteelusa.com';
+
+  function buildMailto(subject, data) {
+    const lines = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join('\n');
+    return `mailto:${FALLBACK_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines)}`;
+  }
+
+  function showStatus(statusEl, ok, message, fallbackHref) {
+    statusEl.classList.add('show');
+    const okHtml = `
+      <div class="stamp-ok">✓</div>
+      <h3>Request received</h3>
+      <p>${message}</p>`;
+    const errHtml = `
+      <h3 class="err">Couldn't send automatically</h3>
+      <p>${message}</p>
+      ${fallbackHref ? `<p style="margin-top:14px;"><a class="submit" style="display:inline-flex; text-decoration:none;" href="${fallbackHref}">Open email client instead →</a></p>` : ''}`;
+    statusEl.innerHTML = ok ? okHtml : errHtml;
+  }
+
+  async function submitForm(form, statusEl, submitBtn, successMsg, subject) {
+    const fd = new FormData(form);
+    // Honey-pot check (two of them: legacy _honey + visually-hidden "website")
+    if (fd.get('_honey') || fd.get('website')) {
+      // Pretend success so the bot doesn't retry
+      form.querySelectorAll('.field, .actions').forEach(el => el.style.display = 'none');
+      showStatus(statusEl, true, successMsg);
+      return;
+    }
+
+    // Min fill-time check — bots typically submit in <1s
+    const minMs = parseInt(form.dataset.minFillMs || '0', 10);
+    const openedAt = parseInt(form.dataset.openedAt || '0', 10);
+    if (minMs && openedAt && (Date.now() - openedAt) < minMs) {
+      // Silently swallow — almost certainly a bot
+      form.querySelectorAll('.field, .actions').forEach(el => el.style.display = 'none');
+      showStatus(statusEl, true, successMsg);
+      return;
+    }
+
+    // Strip internal fields from mailto fallback
+
+    // Build mailto fallback from form fields
+    const data = {};
+    for (const [k, v] of fd.entries()) {
+      if (k.startsWith('_') || k === '_honey') continue;
+      if (v) data[k] = v;
+    }
+    const mailtoHref = buildMailto(subject, data);
+
+    submitBtn.disabled = true;
+    const origLabel = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span>Sending…</span>';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: fd
+      });
+      if (res.ok) {
+        // Hide the form fields, show success
+        form.querySelectorAll('.field, .actions').forEach(el => el.style.display = 'none');
+        showStatus(statusEl, true, successMsg);
+      } else {
+        throw new Error('non-200');
+      }
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = origLabel;
+      showStatus(statusEl, false,
+        "Our auto-submit hit a snag. Click below to send via your email app instead — or call our office at +1 (346) 827‑4987.",
+        mailtoHref);
+    }
+  }
+
+  document.getElementById('quoteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!e.target.checkValidity()) {
+      e.target.reportValidity();
+      return;
+    }
+    submitForm(
+      e.target,
+      document.getElementById('qStatus'),
+      document.getElementById('qSubmit'),
+      "Thanks — your request is on its way to our team. We'll be in touch within one business day. For anything urgent, call +1 (346) 827‑4987.",
+      'New quote request — tntsteelusa.com'
+    );
+  });
+
+  document.getElementById('notifyForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!e.target.checkValidity()) {
+      e.target.reportValidity();
+      return;
+    }
+    submitForm(
+      e.target,
+      document.getElementById('nStatus'),
+      document.getElementById('nSubmit'),
+      "You're on the launch list. We'll write the moment the new site is live.",
+      'Launch list signup — tntsteelusa.com'
+    );
+  });
+</script>
+
+</body>
+</html>
